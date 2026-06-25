@@ -1,0 +1,90 @@
+{
+  "name": "vs-folder-explorer",
+  "displayName": "VS Folder Explorer",
+  "description": "A second file explorer with a right-side bookmark strip: switch directories with one click, browse beyond the workspace, search, and Remote-SSH support.",
+  "version": "0.14.0",
+  "publisher": "local",
+  "author": "Yaroslav Gorohov",
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yarhoroh/vs-folder-explorer.git"
+  },
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:vsfe.explorerView"
+  ],
+  "main": "./out/extension.js",
+  "extensionKind": ["ui", "workspace"],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "vsFolderExplorer",
+          "title": "Folder Explorer 2",
+          "icon": "media/explorer.svg"
+        }
+      ]
+    },
+    "views": {
+      "vsFolderExplorer": [
+        {
+          "id": "vsfe.explorerView",
+          "name": "Folder Explorer",
+          "type": "webview"
+        }
+      ]
+    },
+    "commands": [
+      { "command": "vsfe.addBookmark", "title": "Add Bookmark…", "category": "Folder Explorer", "icon": "$(add)" },
+      { "command": "vsfe.addLocalFolder", "title": "Add Local Folder…", "category": "Folder Explorer", "icon": "$(device-desktop)" },
+      { "command": "vsfe.bookmarkCurrent", "title": "Bookmark Current Folder", "category": "Folder Explorer", "icon": "$(pin)" },
+      { "command": "vsfe.search", "title": "Search File…", "category": "Folder Explorer", "icon": "$(search)" },
+      { "command": "vsfe.resetToProject", "title": "Project Folder", "category": "Folder Explorer", "icon": "$(home)" },
+      { "command": "vsfe.refresh", "title": "Refresh", "category": "Folder Explorer", "icon": "$(refresh)" },
+      { "command": "vsfe.diagnostics", "title": "Diagnostics", "category": "Folder Explorer" }
+    ],
+    "menus": {
+      "view/title": [
+        { "command": "vsfe.search", "when": "view == vsfe.explorerView", "group": "navigation@1" },
+        { "command": "vsfe.bookmarkCurrent", "when": "view == vsfe.explorerView", "group": "navigation@2" },
+        { "command": "vsfe.addBookmark", "when": "view == vsfe.explorerView", "group": "navigation@3" },
+        { "command": "vsfe.addLocalFolder", "when": "view == vsfe.explorerView", "group": "navigation@4" },
+        { "command": "vsfe.resetToProject", "when": "view == vsfe.explorerView", "group": "navigation@5" },
+        { "command": "vsfe.refresh", "when": "view == vsfe.explorerView", "group": "navigation@6" }
+      ]
+    },
+    "configuration": {
+      "title": "Folder Explorer",
+      "properties": {
+        "vsfe.search.exclude": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [".git", "node_modules", "bin", "obj", ".vs", "dist", "out", ".next", ".cache"],
+          "description": "Folder names skipped while searching for files."
+        },
+        "vsfe.search.maxResults": {
+          "type": "number",
+          "default": 5000,
+          "description": "Maximum number of files collected for search (guards against walking huge trees)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.0",
+    "@types/vscode": "^1.84.0",
+    "typescript": "^5.4.0"
+  }
+}
